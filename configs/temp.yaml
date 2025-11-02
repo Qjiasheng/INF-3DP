@@ -1,0 +1,63 @@
+fer_config_defaults: &fer_defaults
+  dataset: &fer_data_defaults
+    save_path: "logs/collision"
+
+    sdf_checkpoint_path: "logs/sdf/ferz/checkpoints/model_final.pth"
+    slice_checkpoint_path: "logs/fn_slice/fer_fn/checkpoints/model_final.pth"  # as init
+    
+    base_threshold: -0.78  # flat base platform also has collision, push dir is z-up
+
+  optim:
+    model_type: "sine"
+    lr: 0.0001
+    num_epochs: 100
+    epochs_til_ckpt: 10
+    steps_til_summary: 10
+
+
+fer_single_shell:
+  <<: *fer_defaults
+
+  dataset:
+    <<: *fer_data_defaults
+    <<: *nozzle_defaults
+    level_checkpoint_path: "logs/levels/fer_single_shell/level_classifier.pth"    # space partition
+    level_dataset_path: "logs/toolpath/fer_single_shell/print_level_dataset.pth"  # get num of classes
+    waypoint_path: "logs/toolpath/fer_single_shell/waypoints.xyz"
+
+    # for testing
+    collision_checkpoint_path: "logs/collision/fer_single_shell/checkpoints/model_final.pth"
+    resolution: 128
+
+  parameters:
+    object_scale: 60.0     # physical scale for [-1, 1], max dim is 2*object_scale mm
+    # loss weights
+    collision: 10.0 
+    sf: 1.0
+    dir_deviation: 30.0
+    frame_dirs_veclap: 0.3
+    print_dirs_veclap: 0.05
+
+
+fer_infill:
+  <<: *fer_defaults
+
+  dataset:
+    <<: *fer_data_defaults
+    <<: *nozzle_defaults
+    level_checkpoint_path: "logs/levels/fer_infill/level_classifier.pth"    # space partition
+    level_dataset_path: "logs/toolpath/fer_infill/print_level_dataset.pth"  # get num of classes
+    waypoint_path: "logs/toolpath/fer_infill/waypoints.xyz"
+
+    # for testing
+    collision_checkpoint_path: "logs/collision/fer_infill/checkpoints/model_final.pth"
+    resolution: 128
+
+  parameters:
+    object_scale: 60.0     # physical scale for [-1, 1], max dim is 2*object_scale mm
+    # loss weights
+    collision: 10.0 
+    sf: 1.0
+    dir_deviation: 30.0
+    frame_dirs_veclap: 0.3
+    print_dirs_veclap: 0.05

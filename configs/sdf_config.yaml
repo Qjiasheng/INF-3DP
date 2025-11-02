@@ -1,0 +1,138 @@
+# params.yaml to prepare different sets of parameters for different model
+# this is to train an sdf field
+
+# -------------------------------------------------------- preparation as further init
+height_config_defaults: &height_defaults
+  dataset: &height_dataset
+    save_path: "logs/sdf"
+    batch_size: 1000
+    num_batches: 10
+  optim:
+    model_type: "sine"
+    lr: 0.0001
+    num_epochs: 1000
+    epochs_til_ckpt: 2000                       # tune both for summary frequency
+    steps_til_summary: 2000
+
+height:
+  comments: "height field"                     # may add any comments for notes if needed
+  date: "2024-11-11"
+  <<: *height_defaults
+
+  dataset:
+    <<: *height_dataset
+    ref_dir: "z"  
+
+  parameters:
+    sdf_pen: 10000.0             
+    normal: 200.0                
+    grad: 50.0                   
+    laplace: 1.0                 
+
+
+xfield:
+  comments: ""
+  date: "2024-11-11"
+
+  <<: *height_defaults
+
+  dataset:
+    <<: *height_dataset
+    ref_dir: "x"  
+
+  parameters:
+    sdf_pen: 10000.0
+    normal: 200.0
+    grad: 50.0 
+    laplace: 1.0
+
+yfield:
+  comments: ""
+  date: "2024-11-11"
+
+  <<: *height_defaults
+
+  dataset:
+    <<: *height_dataset
+    ref_dir: "y"  
+
+  parameters:
+    sdf_pen: 10000.0
+    normal: 200.0
+    grad: 50.0 
+    laplace: 1.0
+
+# -------------------------------------------------------- model use
+
+bunny_config_defaults: &bunny_defaults
+  dataset:
+    save_path: "logs/sdf"
+    point_cloud_path: "sdf_data/bunnyz.xyz"
+    batch_size: 2000
+
+    # used for testing
+    sdf_checkpoint_path: "logs/sdf/bunnyz/checkpoints/model_final.pth"
+    resolution: 256
+    # for further field training
+    curv_step_size: 0.3
+    base_threshold: -0.63                 # Set it by checking in visulizer,  base_th in [-1, 1] to set Neumann BC
+    exp_data_path: "data/bunnyz.xyz"        # contains `base tags`, `curvature directions` and `density` for further field training
+    density_base_sample_num: 100000         # base uniformly sampled in cube, filter by sdf to get infill samples
+    density_sample_num: 20000               # number of samples to have density values, will not use if no density-varying infill needed
+    
+  optim:
+    model_type: "sine"
+    lr: 0.0001
+    num_epochs: 10000
+    epochs_til_ckpt: 2000
+    steps_til_summary: 2000
+
+bunnyz:
+  comments: ""
+  date: "2024-11-11"
+  <<: *bunny_defaults
+  parameters:
+    sdf: 3000.0                  # zero level set fitting
+    inter: 100.0                 # not generate zero-level if non-surafce region
+    normal: 200.0                # eikonal loss
+    grad_init: 100.0             # gradient norm regularization
+    grad_decay: 10.0             
+    laplace_init: 1.0            # laplace smoothing to eliminate high-freq (ghost geometry)
+
+
+fertility_config_defaults: &fertility_defaults
+  dataset:
+    save_path: "logs/sdf"
+    point_cloud_path: "sdf_data/fertilityz.xyz"
+    batch_size: 2000
+
+    # used for testing
+    sdf_checkpoint_path: "logs/sdf/fertilityz/checkpoints/model_final.pth"
+    resolution: 256
+    # for further field training
+    curv_step_size: 0.1
+    base_threshold: -0.60  
+    exp_data_path: "data/fertilityz.xyz" 
+    density_base_sample_num: 200000
+    density_sample_num: 20000
+    
+  optim:
+    model_type: "sine"
+    lr: 0.0001
+    num_epochs: 10000
+    epochs_til_ckpt: 2000
+    steps_til_summary: 2000
+
+fertilityz:
+  comments: ""
+  date: "2024-11-11"
+  <<: *fertility_defaults
+  parameters:
+    sdf: 3000.0
+    inter: 100.0
+    normal: 200.0
+    grad_init: 100.0 
+    grad_decay: 10.0
+    laplace_init: 1.0
+
+

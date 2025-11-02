@@ -1,0 +1,7 @@
+__pycache__/
+**/__pycache__/
+**/build/
+contour_cuda/qupkg.egg-info
+.vscode
+logs/*
+poetry.lock

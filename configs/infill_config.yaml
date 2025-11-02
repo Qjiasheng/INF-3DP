@@ -1,0 +1,161 @@
+bunny_config_defaults: &bunny_defaults
+  dataset: &bunny_data_defaults
+    save_path: "logs/infill"
+    point_cloud_path: "data/bunnyz.xyz"
+    infill_density_pcd_path: "logs/sdf/bunnyz/density_field.xyz"    # prepared interior pcd with density values, see `sdf_meshing`
+    sdf_checkpoint_path: "logs/sdf/bunnyz/checkpoints/model_final.pth"
+    slice_checkpoint_path: "logs/fn_slice/bunny_fn/checkpoints/model_final.pth"
+    
+    resolution: 256
+    batch_size: 10000
+    num_batches: 10
+  optim:
+    model_type: "sine"
+    lr: 0.0001
+    num_epochs: 100
+    epochs_til_ckpt: 2000
+    steps_til_summary: 2000
+
+
+bunny_beta_0_wd:
+  <<: *bunny_defaults
+
+  dataset:
+    <<: *bunny_data_defaults
+    init_checkpoint_path: "logs/sdf/yfield/checkpoints/model_final.pth"  # init field, x or y field, init losses are different.
+    beta_degree: 0
+    enable_density: True
+
+    # for testing
+    infill_checkpoint_path: "logs/infill/bunny_beta_0_wd/checkpoints/model_final.pth"
+
+  parameters:
+    # parameters for lattice field training
+    dir: 200.0
+    len: 10.0
+    vec_lap: 5.0
+    scalar_lap: 1.0  
+
+bunny_beta_0_wod:
+  <<: *bunny_defaults
+
+  dataset:
+    <<: *bunny_data_defaults
+    init_checkpoint_path: "logs/sdf/yfield/checkpoints/model_final.pth"
+    beta_degree: 0
+    enable_density: False
+
+    # for testing
+    infill_checkpoint_path: "logs/infill/bunny_beta_0_wod/checkpoints/model_final.pth"
+
+  parameters:
+    # parameters for lattice field training
+    dir: 200.0
+    len: 10.0
+    vec_lap: 5.0
+    scalar_lap: 1.0  
+
+
+
+bunny_beta_90_wd:
+  <<: *bunny_defaults
+
+  dataset:
+    <<: *bunny_data_defaults
+    init_checkpoint_path: "logs/sdf/xfield/checkpoints/model_final.pth"
+    beta_degree: 90
+    enable_density: True
+
+    # for testing
+    infill_checkpoint_path: "logs/infill/bunny_beta_90_wd/checkpoints/model_final.pth"
+
+  parameters:
+    # parameters for lattice field training
+    dir: 200.0
+    len: 10.0
+    vec_lap: 5.0
+    scalar_lap: 1.0
+
+
+
+bunny_beta_90_wod:
+  <<: *bunny_defaults
+
+  dataset:
+    <<: *bunny_data_defaults
+    init_checkpoint_path: "logs/sdf/xfield/checkpoints/model_final.pth"
+    beta_degree: 90
+    enable_density: False
+
+    # for testing
+    infill_checkpoint_path: "logs/infill/bunny_beta_90_wod/checkpoints/model_final.pth"
+
+  parameters:
+    # parameters for lattice field training
+    dir: 200.0
+    len: 10.0
+    vec_lap: 5.0
+    scalar_lap: 1.0
+
+
+
+
+fer_config_defaults: &fer_defaults
+  dataset: &fer_data_defaults
+    save_path: "logs/infill"
+    point_cloud_path: "data/fertilityz.xyz"
+    infill_density_pcd_path: "logs/sdf/fertilityz/density_field.xyz"
+    sdf_checkpoint_path: "logs/sdf/fertilityz/checkpoints/model_final.pth"
+    slice_checkpoint_path: "logs/fn_slice/fer_fn/checkpoints/model_final.pth"
+    
+    resolution: 256
+    batch_size: 10000
+    num_batches: 10
+  optim:
+    model_type: "sine"
+    lr: 0.0001
+    num_epochs: 100
+    epochs_til_ckpt: 2000
+    steps_til_summary: 2000
+
+
+
+fer_beta_0_wd:
+  <<: *fer_defaults
+
+  dataset:
+    <<: *fer_data_defaults
+    init_checkpoint_path: "logs/sdf/yfield/checkpoints/model_final.pth"
+    beta_degree: 0
+    enable_density: True
+
+    # for testing
+    infill_checkpoint_path: "logs/infill/fer_beta_0_wd/checkpoints/model_final.pth"
+
+  parameters:
+    # parameters for lattice field training
+    dir: 200.0
+    len: 10.0
+    vec_lap: 5.0
+    scalar_lap: 1.0
+
+
+
+fer_beta_90_wd:
+  <<: *fer_defaults
+
+  dataset:
+    <<: *fer_data_defaults
+    init_checkpoint_path: "logs/sdf/yfield/checkpoints/model_final.pth"
+    beta_degree: 90
+    enable_density: True
+
+    # for testing
+    infill_checkpoint_path: "logs/infill/fer_beta_90_wd/checkpoints/model_final.pth"
+
+  parameters:
+    # parameters for lattice field training
+    dir: 200.0
+    len: 10.0
+    vec_lap: 5.0
+    scalar_lap: 1.0

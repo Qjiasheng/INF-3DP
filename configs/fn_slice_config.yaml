@@ -1,0 +1,81 @@
+# params.yaml to prepare different sets of parameters for different model
+# this is to train second-stage guidance field 
+
+bunny_config_defaults: &bunny_defaults
+  dataset: &bunny_dataset_defaults
+    save_path: "logs/fn_slice"
+    point_cloud_path: "data/bunnyz.xyz"
+    sdf_checkpoint_path: "logs/sdf/bunnyz/checkpoints/model_final.pth"
+    init_checkpoint_path: "logs/init_slice/bunny_init/checkpoints/model_final.pth"    # use first-stage field as init
+    batch_size: 2000
+    num_batches: 10
+
+    # used for testing
+    mesh_path: "logs/sdf/bunnyz/pcd.ply"
+    resolution: 256                                                                  # space grid resolution
+
+  optim:
+    model_type: "sine"
+    lr: 0.0001
+    num_epochs: 100
+    epochs_til_ckpt: 10
+    steps_til_summary: 500
+
+
+bunny_fn:
+  <<: *bunny_defaults
+  
+  dataset:
+    <<: *bunny_dataset_defaults
+    # used for testing
+    slice_checkpoint_path: "logs/fn_slice/bunny_fn/checkpoints/model_final.pth"
+
+  parameters:
+    surf_grad_len: 60.0                     # for unfiorm geodesic distance (uniform surface layer thickness)
+    inside_grad_len: 0.0                    # unfiorm inside filling layer thickness
+    surf_dir: 60.0                          # surface direction alignment with first gradient direction 
+    base_dir: 1.0                           # base point up-z direction alignment
+    veclap: 0.1                             # gradient vector laplacian smoothing
+    hessian: 0.02                           # to flatten curved iso-layers
+
+
+fer_config_defaults: &fer_defaults
+  dataset: &fer_dataset_defaults
+    save_path: "logs/fn_slice"
+    point_cloud_path: "data/fertilityz.xyz"
+    sdf_checkpoint_path: "logs/sdf/fertilityz/checkpoints/model_final.pth"
+    init_checkpoint_path: "logs/init_slice/fer_init/checkpoints/model_final.pth"
+    batch_size: 2000
+    num_batches: 10
+
+    # used for testing
+    mesh_path: "logs/sdf/fertilityz/pcd.ply"
+    resolution: 256
+
+  optim:
+    model_type: "sine"
+    lr: 0.0001
+    num_epochs: 100
+    epochs_til_ckpt: 10
+    steps_til_summary: 500
+
+
+
+
+fer_fn:
+  <<: *fer_defaults
+  
+  dataset:
+    <<: *fer_dataset_defaults
+    # used for testing
+    slice_checkpoint_path: "logs/fn_slice/fer_fn/checkpoints/model_final.pth"
+
+  parameters:
+    surf_grad_len: 30.0
+    inside_grad_len: 0.0
+    surf_dir: 80.0
+    base_dir: 1.0
+    veclap: 0.1
+    hessian: 0.002
+
+

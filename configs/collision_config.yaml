@@ -1,0 +1,154 @@
+# collision configs for different models
+
+
+# example nozzle for collision
+nozzle_pcd: &nozzle_defaults 
+  nozzle_pcd_path: "data/rect_nozzle.xyz"                # for training 
+  nozzle_shell_pcd_path: "data/rect_nozzle_shell.xyz"    # for testing only need shell, faster check
+  nozzle_mesh_path: "data/rect_nozzle.ply"               # for visualization
+
+
+bunny_config_defaults: &bunny_defaults
+  dataset: &bunny_data_defaults
+    save_path: "logs/collision"
+
+    sdf_checkpoint_path: "logs/sdf/bunnyz/checkpoints/model_final.pth"
+    slice_checkpoint_path: "logs/fn_slice/bunny_fn/checkpoints/model_final.pth"  
+    
+    base_threshold: -0.63   # if under flat base platform, also raise collision, push dir is z-up
+    batch_size: 15000      # one epoch loaded waypoints
+
+  optim:
+    model_type: "sine"
+    lr: 0.0001
+    num_epochs: 100
+    epochs_til_ckpt: 10
+    steps_til_summary: 10
+
+
+bunny_single_shell:
+  <<: *bunny_defaults
+
+  dataset:
+    <<: *bunny_data_defaults
+    <<: *nozzle_defaults
+    level_checkpoint_path: "logs/levels/bunny_single_shell/level_classifier.pth"    # space partition
+    level_dataset_path: "logs/toolpath/bunny_single_shell/print_level_dataset.pth"  # get num of classes
+    waypoint_path: "logs/toolpath/bunny_single_shell/waypoints.xyz"                 # save waypoints after toolpath generation
+
+    # for testing
+    collision_checkpoint_path: "logs/collision/bunny_single_shell/checkpoints/model_final.pth"
+    resolution: 128
+
+  parameters:
+    object_scale: 60.0     # physical scale to scale training space [-1, 1]
+    # loss weights
+    # warm-up stage weights
+    dir_align: 10.0
+    print_vec_lap_warm: 0.1
+    frame_vec_lap_warm: 0.1
+    # training weights
+    coll: 1.0
+    sf: 120.0
+    print_vec_lap: 0.1
+    frame_vec_lap: 0.1
+
+
+bunny_infill:
+  <<: *bunny_defaults
+
+  dataset:
+    <<: *bunny_data_defaults
+    <<: *nozzle_defaults
+    level_checkpoint_path: "logs/levels/bunny_infill/level_classifier.pth"    # space partition
+    level_dataset_path: "logs/toolpath/bunny_infill/print_level_dataset.pth"  # get num of classes
+    waypoint_path: "logs/toolpath/bunny_infill/waypoints.xyz"
+
+    # for testing
+    collision_checkpoint_path: "logs/collision/bunny_infill/checkpoints/model_final.pth"
+    resolution: 128
+
+  parameters:
+    object_scale: 60.0     # physical scale for [-1, 1], 
+    # loss weights
+    dir_align: 10.0
+    print_vec_lap_warm: 0.1
+    frame_vec_lap_warm: 0.1
+
+    coll: 1.0
+    sf: 120.0
+    print_vec_lap: 0.1
+    frame_vec_lap: 0.1
+
+
+
+fer_config_defaults: &fer_defaults
+  dataset: &fer_data_defaults
+    save_path: "logs/collision"
+
+    sdf_checkpoint_path: "logs/sdf/fertilityz/checkpoints/model_final.pth"
+    slice_checkpoint_path: "logs/fn_slice/fer_fn/checkpoints/model_final.pth"  # as init
+    
+    base_threshold: -0.60  # flat base platform also has collision, push dir is z-up
+    batch_size: 10000
+
+  optim:
+    model_type: "sine"
+    lr: 0.0001
+    num_epochs: 100
+    epochs_til_ckpt: 10
+    steps_til_summary: 10
+
+
+fer_single_shell:
+  <<: *fer_defaults
+
+  dataset:
+    <<: *fer_data_defaults
+    <<: *nozzle_defaults
+    level_checkpoint_path: "logs/levels/fer_single_shell/level_classifier.pth"    # space partition
+    level_dataset_path: "logs/toolpath/fer_single_shell/print_level_dataset.pth"  # get num of classes
+    waypoint_path: "logs/toolpath/fer_single_shell/waypoints.xyz"
+
+    # for testing
+    collision_checkpoint_path: "logs/collision/fer_single_shell/checkpoints/model_final.pth"
+    resolution: 128
+
+  parameters:
+    object_scale: 150.0     # physical scale for [-1, 1], 
+    # loss weights
+    dir_align: 10.0
+    print_vec_lap_warm: 0.1
+    frame_vec_lap_warm: 0.1
+
+    coll: 1.0
+    sf: 120.0
+    print_vec_lap: 0.1
+    frame_vec_lap: 0.1
+
+
+fer_infill:
+  <<: *fer_defaults
+
+  dataset:
+    <<: *fer_data_defaults
+    <<: *nozzle_defaults
+    level_checkpoint_path: "logs/levels/fer_infill/level_classifier.pth"    # space partition
+    level_dataset_path: "logs/toolpath/fer_infill/print_level_dataset.pth"  # get num of classes
+    waypoint_path: "logs/toolpath/fer_infill/waypoints.xyz"
+
+    # for testing
+    collision_checkpoint_path: "logs/collision/fer_infill/checkpoints/model_final.pth"
+    resolution: 128
+
+  parameters:
+    object_scale: 150.0     # physical scale for [-1, 1], 
+    # loss weights
+    dir_align: 10.0
+    print_vec_lap_warm: 0.1
+    frame_vec_lap_warm: 0.1
+
+    coll: 1.0
+    sf: 120.0
+    print_vec_lap: 0.1
+    frame_vec_lap: 0.1

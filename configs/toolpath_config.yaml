@@ -1,0 +1,103 @@
+# toolpath generation configs for different objects and types
+
+
+bunny_config_defaults: &bunny_defaults
+  dataset:
+    save_path: "logs/toolpath"
+    mesh_path: "logs/sdf/bunnyz/pcd.ply"  
+    sdf_checkpoint_path: "logs/sdf/bunnyz/checkpoints/model_final.pth"
+    slice_checkpoint_path: "logs/fn_slice/bunny_fn/checkpoints/model_final.pth"
+
+    # usr can alter infill field types and slice numbers for infill
+    lattice1_checkpoint_path: "logs/infill/bunny_beta_0_wd/checkpoints/model_final.pth"
+    lattice2_checkpoint_path: "logs/infill/bunny_beta_90_wd/checkpoints/model_final.pth"
+
+    # exported
+    waypoint_filename: "waypoints.xyz"
+    object_scale: 60.0  # object scale in physical world. [-1, 1] to [-scale, scale]. thus total scale is 2*scale in mm.
+  optim:
+    model_type: "sine"
+
+
+
+bunny_single_shell:
+  <<: *bunny_defaults
+  type: "single_shell"
+  parameters:
+    resolution: 256                         # space grid resolution
+    sdf_level_num: 1                        # single shell
+    slice_num: 500                          # number of slice iso values
+    jump_threshold: 0.4                     # isocontour center jump threshold, for planning
+    outer_down_ratio: 8                     # down sampling ratio if uniformly sampling along iso-contour
+    continuous_cnt_lim: 1000                # max continuous growing number of contours
+
+
+
+bunny_infill:
+  comments: "lattice infill or solid volume of bunny"
+  date: "2024-11-11"
+
+  <<: *bunny_defaults
+  type: "lattice"
+  parameters:
+    resolution: 256   
+    sdf_level_num: 2                        # shell numbers to extract sdf levels
+    sdf_level_margin: 0.02                  # sdf level margin (inside)
+    slice_num: 500                          # number of layers
+    lattice1_num: 20                        # number of infill layers for lattice 1
+    lattice2_num: 20                        # number of infill layers for lattice 2
+    jump_threshold: 0.4
+    till_slice_layers: 100                  # use former 100 layers for interval distance threshold for segments splitting
+    outer_down_ratio: 4
+    continuous_cnt_lim: 1000
+
+
+
+fer_config_defaults: &fer_defaults
+  dataset:
+    save_path: "logs/toolpath"
+    mesh_path: "logs/sdf/fertilityz/pcd.ply"  
+    sdf_checkpoint_path: "logs/sdf/fertilityz/checkpoints/model_final.pth"
+    slice_checkpoint_path: "logs/fn_slice/fer_fn/checkpoints/model_final.pth"
+
+    # usr can alter infill fields and number for infill
+    lattice1_checkpoint_path: "logs/infill/fer_beta_0_wd/checkpoints/model_final.pth"
+    lattice2_checkpoint_path: "logs/infill/fer_beta_90_wd/checkpoints/model_final.pth"
+
+    # exported
+    waypoint_filename: "waypoints.xyz"
+    object_scale: 100.0
+  optim:
+    model_type: "sine"
+
+
+
+fer_single_shell:
+  <<: *fer_defaults
+  type: "single_shell"
+  parameters:
+    resolution: 256
+    sdf_level_num: 1                                # single shell
+    slice_num: 1000                                 # number of layers
+    jump_threshold: 0.05                            # isocontour center jump threshold
+    outer_down_ratio: 4                             # down sampling ratio if uniformly sampling along iso-contour
+    continuous_cnt_lim: 1000                        # max continuous growing number of contours
+
+
+fer_infill:
+  comments: "lattice infill or solid volume of bunny"
+  date: "2024-11-11"
+
+  <<: *fer_defaults
+  type: "lattice"
+  parameters:
+    resolution: 256                                  
+    sdf_level_num: 2 
+    sdf_level_margin: 0.02
+    slice_num: 1000
+    lattice1_num: 40
+    lattice2_num: 40
+    till_slice_layers: 120  
+    jump_threshold: 0.05
+    outer_down_ratio: 10
+    continuous_cnt_lim: 1000

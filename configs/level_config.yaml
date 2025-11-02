@@ -1,0 +1,83 @@
+# train level/ partition classifier configs
+
+
+bunny_config_defaults: &bunny_defaults
+  dataset: &bunny_data_defaults
+    slice_checkpoint_path: "logs/fn_slice/bunny_fn/checkpoints/model_final.pth"
+    save_path: "logs/levels"
+
+  optim:
+    model_type: "sine"
+    batch_size: 20000
+    epochs: 100
+    lr: 0.001
+
+
+bunny_single_shell:
+  <<: *bunny_defaults
+
+  dataset:
+    <<: *bunny_data_defaults
+    level_dataset_path: "logs/toolpath/bunny_single_shell/print_level_dataset.pth"
+    waypoint_path: "logs/toolpath/bunny_single_shell/waypoints.xyz"
+
+    # for testing
+    level_checkpoint_path: "logs/levels/bunny_single_shell/level_classifier.pth"
+    resolution: 256
+  parameters:
+
+
+bunny_infill:
+  <<: *bunny_defaults
+
+  dataset:
+    <<: *bunny_data_defaults
+    level_dataset_path: "logs/toolpath/bunny_infill/print_level_dataset.pth"
+    waypoint_path: "logs/toolpath/bunny_infill/waypoints.xyz"
+
+    # for testing
+    level_checkpoint_path: "logs/levels/bunny_infill/level_classifier.pth"
+    resolution: 256
+  parameters:
+
+    
+
+
+fer_config_defaults: &fer_defaults
+  dataset: &fer_data_defaults
+    slice_checkpoint_path: "logs/fn_slice/fer_fn/checkpoints/model_final.pth"
+    save_path: "logs/levels"
+
+  optim:
+    model_type: "sine"
+    batch_size: 20000
+    epochs: 100
+    lr: 0.001
+
+
+fer_single_shell:
+  <<: *fer_defaults
+
+  dataset:
+    <<: *fer_data_defaults
+    level_dataset_path: "logs/toolpath/fer_single_shell/print_level_dataset.pth"
+    waypoint_path: "logs/toolpath/fer_single_shell/waypoints.xyz"
+
+    # for testing
+    level_checkpoint_path: "logs/levels/fer_single_shell/level_classifier.pth"
+    resolution: 256
+  parameters:
+
+
+fer_infill:
+  <<: *fer_defaults
+
+  dataset:
+    <<: *fer_data_defaults
+    level_dataset_path: "logs/toolpath/fer_infill/print_level_dataset.pth"
+    waypoint_path: "logs/toolpath/fer_infill/waypoints.xyz"
+
+    # for testing
+    level_checkpoint_path: "logs/levels/fer_infill/level_classifier.pth"
+    resolution: 256
+  parameters:

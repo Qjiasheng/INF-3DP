@@ -1,0 +1,75 @@
+# this is to train first-stage guidance field
+
+bunny_config_defaults: &bunny_defaults
+  dataset: &bunny_dataset_defaults
+    save_path: "logs/init_slice"
+    point_cloud_path: "data/bunnyz.xyz"
+    height_checkpoint_path: "logs/sdf/height/checkpoints/model_final.pth"   # height field as init
+    batch_size: 2000
+    num_batches: 10 
+
+    # used for testing
+    sdf_checkpoint_path: "logs/sdf/bunnyz/checkpoints/model_final.pth"
+    mesh_path: "logs/sdf/bunnyz/pcd.ply"
+    resolution: 256
+  optim:
+    model_type: "sine"
+    lr: 0.0001
+    num_epochs: 10
+    epochs_til_ckpt: 50  # set small if needed
+    steps_til_summary: 50
+
+bunny_init:
+  <<: *bunny_defaults
+  dataset:
+    <<: *bunny_dataset_defaults
+    # used for testing
+    slice_checkpoint_path: "logs/init_slice/bunny_init/checkpoints/model_final.pth"
+  parameters:
+    use_heat_grad: False                       # whether to use heat gradient for alignment
+    grad: 0.0                                  # uniform gradient norm 
+    base_grad: 5.0                             # base point up-z gradient alignment
+    laplace: 0.001                             # surafce gradient vector laplacian smoothing
+    curv_align: 3.0                            # curvature direction alignment
+    heat_align: 0.0                            # heat gradient alignment if needed
+    tangent: 3.0                               # impose gradient close to tangent plane
+
+
+
+
+fer_config_defaults: &fer_defaults
+  dataset: &fer_dataset_defaults
+    save_path: "logs/init_slice"
+    point_cloud_path: "data/fertilityz.xyz"
+    height_checkpoint_path: "logs/sdf/height/checkpoints/model_final.pth"
+    batch_size: 2000
+    num_batches: 10
+
+    # used for testing
+    sdf_checkpoint_path: "logs/sdf/fertilityz/checkpoints/model_final.pth"
+    mesh_path: "logs/sdf/fertilityz/pcd.ply"
+    resolution: 256
+  optim:
+    model_type: "sine"
+    lr: 0.0001
+    num_epochs: 10
+    epochs_til_ckpt: 50  
+    steps_til_summary: 50
+
+
+fer_init:
+  <<: *fer_defaults
+  dataset:
+    <<: *fer_dataset_defaults
+    # used for testing
+    slice_checkpoint_path: "logs/init_slice/fer_init/checkpoints/model_final.pth"
+  parameters:
+    use_heat_grad: False
+    grad: 0.0
+    base_grad: 1.0
+    laplace: 0.001
+    curv_align: 3.0
+    heat_align: 0.0
+    tangent: 3.0  
+
+
