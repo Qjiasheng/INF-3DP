@@ -16,7 +16,7 @@
 
 > SIGGRAPH Asia 2025 (ACM Transactions on Graphics)
 >
-> [Jiasheng Qu$^1$ ](https://qjiasheng.github.io/), Zhuo Huang$^{1,2}$, Dezhao Guo$^1$, Hailin Sun$^1$, Aoran Lyu$^2$, [Chengkai Dai$^3$](https://chengkai-dai.github.io/), Yeung Yam$^{1, 3}$, and [Guoxin Fang$^{1, 3, *}$](https://guoxinfang.github.io/) 
+> [Jiasheng Qu<sup>1</sup> ](https://qjiasheng.github.io/), Zhuo Huang<sup>1, 2</sup>, Dezhao Guo<sup>1</sup>, Hailin Sun<sup>1</sup>, Aoran Lyu<sup>2</sup>, [Chengkai Dai<sup>3</sup>](https://chengkai-dai.github.io/), Yeung Yam<sup>1,3</sup>, and [Guoxin Fang<sup>1, 3, *</sup>](https://guoxinfang.github.io/) 
 >
 > 1 The Chinese University of Hong Kong, China. 2 The University of Manchester, Manchester, United Kingdom. 3 Centre for Perceptual and Interactive Intelligence, Hong Kong, China.
 
@@ -26,8 +26,8 @@ INF-3DP is a renewed framework for multi-axis 3D printing, using field computing
 
 Please refer to our paper and video to explore its capabilities and how it can meet your needs. The key features of INF-3DP include:
 
-+ <span style="color:yellow">Scalable (handle million-level waypoints), and collision-free (differentiable motion planning with Time-Varying SDF)</span> 
-+ <span style="color:yellow">Support-free printing, and superior surface quality (optimize singularity) </span> 
++ **Scalable** (handle million-level waypoints), and **collision-free** (differentiable motion planning with Time-Varying SDF)
++ **Support-free** printing, and superior **surface quality** (optimize singularity) 
 
 <img src="./md_assets/teaser.png" alt="teaser" style="zoom:80%;" /> 
 
@@ -40,18 +40,20 @@ Please refer to our paper and video to explore its capabilities and how it can m
 
 
 - [Installation](#installation)
-  - [Quick start](##quick start)
-  - [Test your models](##test your models)
+  - [Quick start](##quick-start)
+  - [Test your models](##test-your-models)
   
-- [Project Structure](#Project Structure) 
+- [Project Structure](#Project-Structure) 
 - [Usages](#usages)
+  - [Viewer](##viewer)
   - [ SDF](##SDF) 
-  - [Guidance field](##guidance field)
-  - [Infill field](##infill field)
-  - [Toolpath generation](##toolpath generation)
-  - [Level field](##level field)
-  - [TV-SDF](##TV-SDF)
-  - [Quaternion field and collision response](##Quaternion field and collision response) 
+  - [Guidance field](##guidance-field)
+  - [Infill field](##infill-field)
+  - [Toolpath generation](##toolpath-generation)
+  - [Level field](##level-field)
+  - [TV-SDF](##tv-sdf)
+  - [Quaternion field and collision response](##quaternion-field-and-collision-response) 
+  
 
 + [Others](#Others)
   + [BibTeX](##BibTeX)
@@ -63,7 +65,7 @@ We build and run this project on Ubuntu 22.04, Nvidia RTX 4090 (24 GB), and 64 G
 
 > :point_right:  Pls check cuda version first  with `nvcc --version`. if same `12.1`, directly use cmds below to set the env. If not, pls make sure torch version is compatible with your cuda version, and refactor some lines in `pyproject.toml`, by checking [Installing previous versions of PyTorch](https://pytorch.org/get-started/previous-versions/). 
 >
-> ```toml
+> ```bash
 > # you may refactor the versions 
 > ...
 > torch = "^2.3.0"
@@ -102,7 +104,7 @@ We build and run this project on Ubuntu 22.04, Nvidia RTX 4090 (24 GB), and 64 G
 
 ## Quick start
 
-Trained example checkpoints, waypoint files, config files that we previously tested are provided in [Google Drive](https://drive.google.com/drive/folders/1PtbKpwon7thvAkUZt09X7_fMXDs1blsy?usp=sharing). Download and place them under the project path, then run scripts to have a quick test.  Key related results can be viewed in [Usages](##usages).
+Trained example checkpoints, waypoint files, config files that we previously tested are provided in [Google Drive](https://drive.google.com/drive/folders/1PtbKpwon7thvAkUZt09X7_fMXDs1blsy?usp=sharing). Download and place them under the project path, then run scripts to have a quick test.  Key related results can be viewed in [Usages](#usages).
 
 :point_right:  If users encounter out-of-memory issues, please reduce the training batch size and the isovalue numbers during toolpath generation.
 
@@ -120,7 +122,7 @@ python slice_view_pcd.py
 
 :rabbit2: For all train/ test applications, make sure parameters block is well set under `experiment_name`  in corresponding  `config_path` files.
 
-### Test your models
+## Test your models
 
 > Below is a brief workflow for testing your models. 
 >
@@ -178,7 +180,7 @@ python exp_scripts/toolpath.py --experiment_name=bunny_infill --config_path=conf
 
 + similar cmds. 
 
-+ :point_right: We also offer `toy_tvsdf.py` to check constructed tvsdf at given working waypoints. Users can use viewer by specifying file paths to check tvsdf volume field.  In addition, the differetiable collision reponse with tvsdf to view push directions when collision happens is also provided, see example results in [TV-SDF](##TV-SDF) and [collision reponse](##Quaternion field and collision response).
++ :point_right: We also offer `toy_tvsdf.py` to check constructed tvsdf at given working waypoints. Users can use viewer by specifying file paths to check tvsdf volume field.  In addition, the differetiable collision reponse with tvsdf to view push directions when collision happens is also provided, see example results in TV-SDF and collision reponse.
 
   ```bash 
   python exp_scripts/toy_tvsdf.py --experiment_name=bunny_single_shell --config_path=configs/collision_config.yaml
@@ -188,12 +190,11 @@ python exp_scripts/toolpath.py --experiment_name=bunny_infill --config_path=conf
   scale_coords = False
   sdf_volume_fn = './logs/collision/bunny_single_shell/tvsdf_volume.npz'  # tvsdf
   pcd_fn = './logs/collision/bunny_single_shell/till_waypts.xyz'
-
+  ```
 
 # Project structure
 
 This project follows similar structure as [SIREN](https://github.com/vsitzmann/siren), but seperates `configs` for different feilds/ toolpath applications since there are many parameters to manage.
-
 ```yaml
 /inf-3dp
 |-- configs/
@@ -222,7 +223,7 @@ This project follows similar structure as [SIREN](https://github.com/vsitzmann/s
 
 > Each field has both `train` and `test` file. Once trained, run test to check results. A viewer based on pyvista and pyqt is provided to visulize volume field.
 >
-> :loudspeaker: Below we show some key result examples. Users can run and refactor codes to check detailed ​results.
+> :loudspeaker: Below we show some key result examples. Users can run and refactor codes to check detailed  results.
 
 ## Viewer
 
@@ -236,66 +237,86 @@ This project follows similar structure as [SIREN](https://github.com/vsitzmann/s
 + Key features are curvature, skeleton, and density field.
 + Heat method on PCD is also provided in `test_sdf.py`, if use heat directions as alignment.
 
-<div style="display: flex; justify-content: space-between; text-align: center;">
-  <figure style="width: 32%;">
-    <img src="./md_assets/min_curv.png" alt="Image 1" style="width: 100%;"/>
-    <figcaption>Min curv directions</figcaption>
-  </figure>
-  <figure style="width: 32%;">
-    <img src="./md_assets/skeleton.png" alt="Image 2" style="width: 100%;"/>
-    <figcaption>Skeleton from SDF</figcaption>
-  </figure>
-  <figure style="width: 32%;">
-    <img src="./md_assets/density.png" alt="Image 3" style="width: 100%;"/>
-    <figcaption>Density field</figcaption>
-  </figure>
-</div>
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="./md_assets/min_curv.png" alt="Image 1" width="100%"/>
+      <br>
+      <b>Min curv directions</b>
+    </td>
+    <td align="center" width="33%">
+      <img src="./md_assets/skeleton.png" alt="Image 2" width="100%"/>
+      <br>
+      <b>Skeleton from SDF</b>
+    </td>
+    <td align="center" width="33%">
+      <img src="./md_assets/density.png" alt="Image 3" width="100%"/>
+      <br>
+      <b>Density field</b>
+    </td>
+  </tr>
+</table>
+
 
 ## Guidance field
 
 + Steamlines on surface and interior isolayers.
 
-<div style="display: flex; justify-content: space-between; text-align: center;">
-  <figure style="width: 20%;">
-    <img src="./md_assets/bunny_stream.png" alt="Image 1" style="width: 100%;"/>
-    <figcaption>Bunny streamlines (1st stage)</figcaption>
-  </figure>
-  <figure style="width: 24%;">
-    <img src="./md_assets/bunny_isolayers.png" alt="Image 2" style="width: 100%;"/>
-    <figcaption>Bunny isolayers (2nd stage) </figcaption>
-  </figure>
-  <figure style="width: 25%;">
-    <img src="./md_assets/fer_stream.png" alt="Image 2" style="width: 100%;"/>
-    <figcaption>Fertility streamlines (1st stage)</figcaption>
-  </figure>
-  <figure style="width: 24%;">
-    <img src="./md_assets/fer_isolayers.png" alt="Image 2" style="width: 100%;"/>
-    <figcaption>Fertility isolayers (2nd stage)</figcaption>
-  </figure>
-</div>
+<table>
+  <tr>
+    <td align="center" width="20%">
+      <img src="./md_assets/bunny_stream.png" alt="Image 1" width="100%"/>
+      <br>
+      <b>Bunny streamlines (1st stage)</b>
+    </td>
+    <td align="center" width="24%">
+      <img src="./md_assets/bunny_isolayers.png" alt="Image 2" width="100%"/>
+      <br>
+      <b>Bunny isolayers (2nd stage)</b>
+    </td>
+    <td align="center" width="25%">
+      <img src="./md_assets/fer_stream.png" alt="Image 3" width="100%"/>
+      <br>
+      <b>Fertility streamlines (1st stage)</b>
+    </td>
+    <td align="center" width="24%">
+      <img src="./md_assets/fer_isolayers.png" alt="Image 4" width="100%"/>
+      <br>
+      <b>Fertility isolayers (2nd stage)</b>
+    </td>
+  </tr>
+</table>
+
 
 ## Infill field
 
 + Density-aware or uniform, orientation-tunable infill fields. 
 
-<div style="display: flex; justify-content: space-between; text-align: center;">
-  <figure style="width: 21%;">
-    <img src="./md_assets/bunny_infill1.png" alt="Image 1" style="width: 100%;"/>
-    <figcaption>Bunny density infill, beta=0</figcaption>
-  </figure>
-  <figure style="width: 20%;">
-    <img src="./md_assets/bunny_infill_uni1.png" alt="Image 1" style="width: 100%;"/>
-    <figcaption>Bunny uniform infill, beta=0</figcaption>
-  </figure>
-  <figure style="width: 25%;">
-    <img src="./md_assets/bunny_infill2.png" alt="Image 2" style="width: 100%;"/>
-    <figcaption>Bunny density infill, beta=90</figcaption>
-  </figure>
-  <figure style="width: 24%;">
-    <img src="./md_assets/bunny_infill_uni2.png" alt="Image 1" style="width: 100%;"/>
-    <figcaption>Bunny uniform infill, beta=90</figcaption>
-  </figure>
-</div>
+<table>
+  <tr>
+    <td align="center" width="21%">
+      <img src="./md_assets/bunny_infill1.png" alt="Image 1" width="100%"/>
+      <br>
+      <b>Bunny density infill, beta=0</b>
+    </td>
+    <td align="center" width="20%">
+      <img src="./md_assets/bunny_infill_uni1.png" alt="Image 2" width="100%"/>
+      <br>
+      <b>Bunny uniform infill, beta=0</b>
+    </td>
+    <td align="center" width="25%">
+      <img src="./md_assets/bunny_infill2.png" alt="Image 3" width="100%"/>
+      <br>
+      <b>Bunny density infill, beta=90</b>
+    </td>
+    <td align="center" width="24%">
+      <img src="./md_assets/bunny_infill_uni2.png" alt="Image 4" width="100%"/>
+      <br>
+      <b>Bunny uniform infill, beta=90</b>
+    </td>
+  </tr>
+</table>
+
 
 ## Toolpath generation
 
@@ -303,35 +324,46 @@ This project follows similar structure as [SIREN](https://github.com/vsitzmann/s
 >
 > Note that, some vis functions here take long time to draw.
 
-<div style="display: flex; justify-content: space-between; text-align: center;">
-  <figure style="width: 28%;">
-    <img src="./md_assets/bunny_isocontour.png" alt="Image 1" style="width: 100%;"/>
-    <figcaption>Bunny iso-contours</figcaption>
-  </figure>
-  <figure style="width: 28%;">
-    <img src="./md_assets/bunny_seq.png" alt="Image 2" style="width: 100%;"/>
-    <figcaption>Bunny printing sequence</figcaption>
-  </figure>
-  <figure style="width: 37%;">
-    <img src="./md_assets/bunny_inflll.jpg" alt="Image 3" style="width: 100%;"/>
-    <figcaption>Bunny infills</figcaption>
-  </figure>
-</div>
+<table>
+  <tr>
+    <td align="center" width="28%">
+      <img src="./md_assets/bunny_isocontour.png" alt="Image 1" width="100%"/>
+      <br>
+      <b>Bunny iso-contours</b>
+    </td>
+    <td align="center" width="28%">
+      <img src="./md_assets/bunny_seq.png" alt="Image 2" width="100%"/>
+      <br>
+      <b>Bunny printing sequence</b>
+    </td>
+    <td align="center" width="37%">
+      <img src="./md_assets/bunny_inflll.jpg" alt="Image 3" width="100%"/>
+      <br>
+      <b>Bunny infills</b>
+    </td>
+  </tr>
+</table>
+
 
 ## Level field
 
 + Level field in space is to partition space, guidance field plane at adjacent levels as classification hyperplanes.
 
-<div style="display: flex; justify-content: space-between; text-align: center;">
-  <figure style="width: 47%;">
-    <img src="./md_assets/bunny_part.png" alt="Image 1" style="width: 70%;"/>
-    <figcaption>Bunny level partition</figcaption>
-  </figure>
-  <figure style="width: 46%;">
-    <img src="./md_assets/fer_part.png" alt="Image 2" style="width: 70%;"/>
-    <figcaption>Fertility level partition</figcaption>
-  </figure>
-</div>
+<table>
+  <tr>
+    <td align="center" width="47%">
+      <img src="./md_assets/bunny_part.png" alt="Image 1" width="70%"/>
+      <br>
+      <b>Bunny level partition</b>
+    </td>
+    <td align="center" width="46%">
+      <img src="./md_assets/fer_part.png" alt="Image 2" width="70%"/>
+      <br>
+      <b>Fertility level partition</b>
+    </td>
+  </tr>
+</table>
+
 
 
 
@@ -339,16 +371,21 @@ This project follows similar structure as [SIREN](https://github.com/vsitzmann/s
 
 + TVSDF at given waypts shown in viewer (toggle off pcd). <span style="color:red">Red point</span> indicates current working waypoint.
 
-<div style="display: flex; justify-content: space-between; text-align: center;">
-  <figure style="width: 47%;">
-    <img src="./md_assets/bunny_tvsdf.png" alt="Image 1" style="width: 70%;"/>
-    <figcaption>Bunny TVSDF</figcaption>
-  </figure>
-  <figure style="width: 48%;">
-    <img src="./md_assets/fer_tvsdf.png" alt="Image 2" style="width: 70%;"/>
-    <figcaption>Fertility TVSDF</figcaption>
-  </figure>
-</div>
+<table>
+  <tr>
+    <td align="center" width="47%">
+      <img src="./md_assets/bunny_tvsdf.png" alt="Image 1" width="70%"/>
+      <br>
+      <b>Bunny TVSDF</b>
+    </td>
+    <td align="center" width="48%">
+      <img src="./md_assets/fer_tvsdf.png" alt="Image 2" width="70%"/>
+      <br>
+      <b>Fertility TVSDF</b>
+    </td>
+  </tr>
+</table>
+
 
 ## Quaternion field and collision response
 
@@ -357,34 +394,48 @@ This project follows similar structure as [SIREN](https://github.com/vsitzmann/s
 + Differentiable collision response with TVSDF. TVSDF gradients as push directions.
 + Comparision before and after optimization to be collision-free.
 
-<div style="display: flex; justify-content: space-between; text-align: center;">
-  <figure style="width: 48%;">
-    <img src="./md_assets/bunny_reposes.png" alt="Image 1" style="width: 80%;"/>
-    <figcaption>Bunny collision reponse</figcaption>
-  </figure>
-  <figure style="width: 38%;">
-    <img src="./md_assets/fer_response.jpg" alt="Image 2" style="width: 80%;"/>
-    <figcaption>Fertility collision reponse</figcaption>
-  </figure>
-</div>
-<div style="display: flex; justify-content: space-between; text-align: center;">
-  <figure style="width: 27%;">
-    <img src="./md_assets/bunny_case1.jpg" alt="Image 1" style="width: 100%;"/>
-    <figcaption>Bunny case 1</figcaption>
-  </figure>
-  <figure style="width: 29%;">
-    <img src="./md_assets/fer_case1.jpg" alt="Image 2" style="width: 100%;"/>
-    <figcaption>Fertility case 1</figcaption>
-  </figure>
-  <figure style="width: 21%;">
-    <img src="./md_assets/fer_case2.jpg" alt="Image 1" style="width: 100%;"/>
-    <figcaption>Fertility case 2</figcaption>
-  </figure>
-  <figure style="width: 18%;">
-    <img src="./md_assets/fer_case3.jpg" alt="Image 2" style="width: 100%;"/>
-    <figcaption>Fertility case 3</figcaption>
-  </figure>
-</div>
+<table>
+  <tr>
+    <td align="center" width="48%">
+      <img src="./md_assets/bunny_reposes.png" alt="Image 1" width="80%"/>
+      <br>
+      <b>Bunny collision response</b>
+    </td>
+    <td align="center" width="38%">
+      <img src="./md_assets/fer_response.jpg" alt="Image 2" width="80%"/>
+      <br>
+      <b>Fertility collision response</b>
+    </td>
+  </tr>
+</table>
+
+
+
+<table>
+  <tr>
+    <td align="center" width="27%">
+      <img src="./md_assets/bunny_case1.jpg" alt="Image 1" width="100%"/>
+      <br>
+      <b>Bunny case 1</b>
+    </td>
+    <td align="center" width="29%">
+      <img src="./md_assets/fer_case1.jpg" alt="Image 2" width="100%"/>
+      <br>
+      <b>Fertility case 1</b>
+    </td>
+    <td align="center" width="21%">
+      <img src="./md_assets/fer_case2.jpg" alt="Image 3" width="100%"/>
+      <br>
+      <b>Fertility case 2</b>
+    </td>
+    <td align="center" width="18%">
+      <img src="./md_assets/fer_case3.jpg" alt="Image 4" width="100%"/>
+      <br>
+      <b>Fertility case 3</b>
+    </td>
+  </tr>
+</table>
+
 
 # Others
 
