@@ -172,11 +172,11 @@ python exp_scripts/toolpath.py --experiment_name=bunny_single_shell --config_pat
 python exp_scripts/toolpath.py --experiment_name=bunny_infill --config_path=configs/toolpath_config.yaml
 ```
 
-#### 5 level/ partition 
+#### 5 Level/ partition 
 
 + similar cmds
 
-#### 6 collision train/ test
+#### 6 Collision train/ test
 
 + similar cmds. 
 
@@ -221,7 +221,7 @@ This project follows similar structure as [SIREN](https://github.com/vsitzmann/s
 
 # Usages
 
-> Each field has both `train` and `test` file. Once trained, run test to check results. A viewer based on pyvista and pyqt is provided to visulize volume field.
+> Each field has both `train` and `test` files. Once trained, run test to check results. A viewer based on pyvista and pyqt is provided to visulize volume field.
 >
 > :loudspeaker: Below we show some key result examples. Users can run and refactor codes to check detailed  results.
 
