@@ -166,7 +166,6 @@ def curvature(y, x):
 
 def min_max_curvs_and_vectors(f, x_temp):
     '''
-    NOTE use differential Hessian, too noisy, 
     Compute the minimal and maximal curvature (principal curvatures) and their direction vectors for batched inputs.
     f: function mapping x (shape: [N, 3]) to y (SDF values, shape: [N])
     x_temp: coordinates, shape: [N, 3], requires_grad=True

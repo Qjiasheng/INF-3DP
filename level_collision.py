@@ -240,8 +240,6 @@ class CollTVSDF(torch.autograd.Function):
     def backward(ctx, dl_dcoll_depths, dl_dcoll_mask=None):
         """"
         return gradients for nozzle pcd in collision
-        ---------------
-        NOTE gradients as push directions may need re-operation for better convergence.
         """
 
         coll_grads, = ctx.saved_tensors # (N, M, 3)
