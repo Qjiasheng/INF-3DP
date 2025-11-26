@@ -536,7 +536,7 @@ def batch_query_tvsdf(queries, sdf_decoder, slice_decoder, level_decoder, num_cl
             # indices that really have to revert to original_sdf
             final_alter_mask = torch.zeros_like(recheck_mask)
             final_alter_mask[recheck_mask] = alter_mask        # combine the two masks
-            pseudo_sdfs_level[final_alter_mask] = original_sdfs_level[final_alter_mask]
+            pseudo_sdfs_level[final_alter_mask] = original_sdfs_level[final_alter_mask] # same as min(slice_sdf, original_sdf)
 
         tvsdf_temp[level_mask] = pseudo_sdfs_level
         level_tvsdf_dict[level] = tvsdf_temp

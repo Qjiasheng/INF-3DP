@@ -62,9 +62,12 @@ def single_shell_toolpath_gen(sdf_decoder, slice_decoder, data_paras, toolpath_p
     build_shell_level_dataset(print_contours, print_isovalues, level_fn, interpolate=False, inter_num=4)
 
     # determine thickness of waypoints -- a fitting bw prj_slice_grad_norm and physical thickness
-    fit_function = build_calibration_thickness(print_contours, sdf_decoder, slice_decoder, fit_down_ratio=300, 
+    # NOTE we here just show a simple example without carefully choosing how many slice layers with specific nozzle thickness capability
+    # e.g., we here use 2.5 mm nozzle, 1000 slice for fertility model is too many. we just show the capability of our method.
+    # Negative thickness are from cubic polynomial fitting, usrs can set a clip(min=0) to avoid negative values
+    fit_function = build_calibration_thickness(print_contours, sdf_decoder, slice_decoder, fit_down_ratio=1000, 
                                                object_scale=object_scale, dist_threshold=3.0)
-    fit_function = np.poly1d([-2.507, 7.146, -7.048, 2.749])  # cubic polynomial fitting. use results after calibration
+    # fit_function = np.poly1d([-2.507, 7.146, -7.048, 2.749])  # cubic polynomial fitting. use results after calibration
 
     # generate and write waypoints file
     waypoints, level_labels = generate_waypoints_with_levels(print_contours, start_indices, print_isovalues)

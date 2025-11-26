@@ -840,6 +840,7 @@ def write_waypoints_single_shell(waypoints, fit_function, slice_decoder, sdf_dec
     # get thickness through fit function
     slice_grad_len = get_prj_grad_len(coords, slice_decoder, sdf_decoder)
     thickness = fit_function(slice_grad_len) # already scaled to mm
+    thickness = thickness.clip(min=0.0, max=None)  # clamp thickness
     
     # physical coords
     phy_coords = coords * object_scale   # scale to mm, move to positive
