@@ -224,10 +224,12 @@ This project follows similar structure as [SIREN](https://github.com/vsitzmann/s
 > Each field has both `train` and `test` files. Once trained, run test to check results. A viewer based on pyvista and pyqt is provided to visulize volume field.
 >
 > :loudspeaker: Below we show some key result examples. Users can run and refactor codes to check detailed  results.
+>
+> :warning:Varying physical setups require customized processing to meet your specific demands, such as layer thickness. Our code provides solutions for toolpath generation and motion planning, and show simple processing.
 
 ## Viewer
 
-+ Simple viewer to visulize volume field.
++ Simple viewer to visualize volume field.
 + BBX to select points. Used to set base threshold for Neumann boundary conditions.
 
 <img src="./md_assets/viewer.png" alt="viewer" style="zoom:40%;" />
@@ -390,6 +392,8 @@ This project follows similar structure as [SIREN](https://github.com/vsitzmann/s
 ## Quaternion field and collision response
 
 > This project gives a simple nozzle model. Users can prepare your nozzle model (in physical scale).
+>
+> :notebook: Current release on collision optimization supports single shell application. Similar collision optimization on infills will be further added.
 
 + Differentiable collision response with TVSDF. TVSDF gradients as push directions.
 + Comparision before and after optimization to be collision-free.
@@ -442,15 +446,16 @@ This project follows similar structure as [SIREN](https://github.com/vsitzmann/s
 ## BibTex
 
 ```md
-@article{Qu2025INF3DP,
-      title={INF-3DP: Implicit Neural Fields for Collision-Free Multi-Axis 3D Printing},
-      author={Qu, Jiasheng and Huang, Zhuo and Guo, Dezhao and Sun, Hailin and Lyu, Aoran and  Dai, Chengkai and Yam, Yeung and Fang, Guoxin},
-      journal={ACM Transactions on Graphics (TOG)},
-      note={To appear in SIGGRAPH Asia 2025},
-      pages={1--18},
-      year={2025},
-      publisher={ACM}
-      }
+@article{qu2025inf,
+  title={INF-3DP: Implicit Neural Fields for Collision-Free Multi-Axis 3D Printing},
+  author={Qu, Jiasheng and Huang, Zhuo and Guo, Dezhao and Sun, Hailin and Lyu, Aoran and Dai, Chengkai and Yam, Yeung and Fang, Guoxin},
+  journal={ACM Transactions on Graphics (TOG)},
+  volume={44},
+  number={6},
+  pages={1--18},
+  year={2025},
+  publisher={ACM New York, NY, USA}
+}
 ```
 
 ## Acknowledgements

@@ -264,7 +264,7 @@ def collision_loss(model_output, gt, epoch, epochs, paras):
             'print_vec_lap': print_dir_vec_lap.norm(dim=-1).mean() * paras.get('print_vec_lap_warm'), 
             'frame_vec_lap': frame_dir_vec_lap.norm(dim=-1).mean() * paras.get('print_vec_lap_warm')
         }
-        metrics = {'collision_rate': 100.0, 'sf_rate': 100.0}
+        metrics = {'collision_rate': 100.0, 'sf_rate': 100.0}   # 100 means during warm-up no collision check
         return losses, metrics
 
     # collision evaluation, gradients to quaternions, detach waypts
