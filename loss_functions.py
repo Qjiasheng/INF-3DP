@@ -102,7 +102,7 @@ def init_slice_field(model_output, gt, epoch, epochs, params):
 
     # align with heat dir (optional)
     if use_heat_grad:
-        heat_align_loss_temp = F.cosine_similarity(slice_prj_dir, heat_dirs, dim=-1) ** 2
+        heat_align_loss_temp = (1 - F.cosine_similarity(slice_prj_dir, heat_dirs, dim=-1)) ** 2
         heat_align_loss = torch.where(tags == 1, heat_align_loss_temp, torch.zeros_like(heat_align_loss_temp))
     else:
         heat_align_loss = torch.tensor(0.0).cuda()
